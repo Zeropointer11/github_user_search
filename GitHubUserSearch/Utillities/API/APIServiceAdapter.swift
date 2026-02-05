@@ -20,7 +20,7 @@ class APIServiceAdapter: APIInterface {
                 self.session.request(urlString)
                     .validate(statusCode: 200 ..< 300)
                     .validate(contentType: ["application/json"])
-                    .responseDecodable(of: T.self, decoder: self.decoder) { (response) in
+                    .responseDecodable(of: T.self, queue: .global(qos: .userInitiated), decoder: self.decoder) { (response) in
                         switch response.result {
                         case .success(let result):
                             observer.onNext(result)
