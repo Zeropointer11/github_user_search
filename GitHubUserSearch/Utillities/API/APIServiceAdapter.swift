@@ -12,12 +12,12 @@ class APIServiceAdapter: APIInterface {
         
     }
     
-    private func request<T : Decodable>(urlString : String) -> Observable<T> {
+    private func request<T : Decodable>(urlString : String, parameters: [String: Any]? = nil) -> Observable<T> {
         return Observable.create { [weak self] (observer) -> Disposable in
             
             do {
                 guard let self = self else { throw APIErrors.selfMissing }
-                self.session.request(urlString)
+                self.session.request(urlString, parameters: parameters)
                     .validate(statusCode: 200 ..< 300)
                     .validate(contentType: ["application/json"])
                     .responseDecodable(of: T.self, decoder: self.decoder) { (response) in
@@ -50,7 +50,7 @@ class APIServiceAdapter: APIInterface {
             return Observable.just(GitHubUserResult.empty())
         }
         else {
-            return request(urlString: "\(self.baseURL)/search/users?q=\(name)")
+            return request(urlString: "\(self.baseURL)/search/users", parameters: ["q": name])
         }
     }
     
@@ -59,7 +59,10 @@ class APIServiceAdapter: APIInterface {
             return Observable.error(APIErrors.emptyResponse)
         }
         else {
-            return request(urlString: "\(self.baseURL)/users/\(userName)")
+            guard let encodedName = userName.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+                return Observable.error(APIErrors.failure(apiError: APIServiceError(message: "Invalid username", documentationURL: nil)))
+            }
+            return request(urlString: "\(self.baseURL)/users/\(encodedName)")
         }
     }
     
