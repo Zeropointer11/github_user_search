@@ -41,5 +41,9 @@ class SearchResultCell: UITableViewCell {
             userImageView?.af.setImage(withURLRequest: URLRequest(url: avatarURL),
                                        placeholderImage: viewModel.placeholderImage)
         }
+
+        self.isAccessibilityElement = true
+        self.accessibilityLabel = "User \(viewModel.userName)"
+        self.accessibilityHint = "Double tap to show details"
     }
 }
