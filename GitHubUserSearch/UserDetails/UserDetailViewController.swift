@@ -46,8 +46,11 @@ class UserDetailViewController: UIViewController {
         disposeBag = DisposeBag()
         APIService.shared
             .userDetails(with: viewModel.user.login)
-            .catchErrorJustReturn(.empty()) // Catch error with an empty result do here you can add an Error handling
-            .bind(to: viewModel.userDetails)
+            .subscribe(onNext: { [weak self] (details) in
+                self?.viewModel?.userDetails.onNext(details)
+            }, onError: { [weak self] (error) in
+                self?.showError(message: error.localizedDescription)
+            })
             .disposed(by: disposeBag)
         
         
@@ -77,6 +80,12 @@ class UserDetailViewController: UIViewController {
 
     }
     
+    private func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
     private func setupView(with user : GitHubUserDetail?) {
         guard let details = user else {
             return
