@@ -3,7 +3,11 @@ import UIKit
 class SearchItemViewModel : BaseViewModel {
     
     let model : GitHubUser
-    let placeholderImage =  UIImage(named: "uer_placeholder")
+    private static let cachedPlaceholderImage = UIImage(named: "uer_placeholder")
+
+    var placeholderImage: UIImage? {
+        return SearchItemViewModel.cachedPlaceholderImage
+    }
     
     required init(model : GitHubUser) {
         self.model = model
