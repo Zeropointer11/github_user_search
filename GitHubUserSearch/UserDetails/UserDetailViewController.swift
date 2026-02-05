@@ -84,10 +84,19 @@ class UserDetailViewController: UIViewController {
         if let url = URL(string: details.avatarURL) {
             userImage?.af.setImage(withURL: url)
         }
+
+        userImage?.isAccessibilityElement = true
+        userImage?.accessibilityLabel = "\(details.login)'s avatar"
+
         lblName?.text = details.name
         lblUserName?.text = details.login
+
         lblFollower?.text = "\(details.followers)"
+        lblFollower?.accessibilityLabel = "\(details.followers) followers"
+
         lblFollowing?.text = "\(details.following)"
+        lblFollowing?.accessibilityLabel = "\(details.following) following"
+
         lblLocation?.text = details.location
         lblEmail?.text = details.email
         

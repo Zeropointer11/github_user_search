@@ -22,7 +22,7 @@ class SearchViewController: UIViewController {
 
     private func setupSearchController() {
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Seach GitHub User"
+        searchController.searchBar.placeholder = "Search GitHub User"
         navigationItem.searchController = searchController
         definesPresentationContext = true
         
